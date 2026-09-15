@@ -8,26 +8,27 @@ layers:
 
 allow_other_rules: false
 waive_rule_ids:
-  # 今回の囲みチェックに無関係なルールをすべて無視
-  - CO.W1
+  - AN.S1
+  - AN.W1
+  - AN.WN
+  - AP.S1
+  - AP.W1
+  - AP.WN
+  - CO.AN
+  - CO.AP
   - CO.S1
+  - CO.W1
   - CO.WD
   - CO.Z1
   - CO.Z3
-  - CO.AP
-  - CO.AN
-  - AP.W1
-  - AP.S1
-  - AP.WN
-  - AN.W1
-  - AN.S1
-  - AN.WN
-  - WN.W1
+  - WN.AN
+  - WN.AP
   - WN.S1
+  - WN.W1
   - WN.Z1
   - WN.Z2
-  - WN.AP
-  - WN.AN
+  - DN.W1    # 追加
+  - DP.W1    # 追加
 
 cases:
   # ==========================================

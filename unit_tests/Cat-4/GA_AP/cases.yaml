@@ -1,0 +1,55 @@
+rule_id: GA.AP
+
+layers:
+  GC: { number: 8, datatype: 1 }
+  AP: { number: 3, datatype: 1 }
+  WN: { number: 140, datatype: 0 }
+
+allow_other_rules: false
+waive_rule_ids:
+  - GC.W1
+  - GC.S1
+  - GC.ANT
+  - AP.W1
+  - AP.S1
+  - AP.WN
+  - WN.W1
+  - WN.S1
+  - WN.AP
+  - GA.CO
+  - DP.W1
+
+cases:
+  # 正常系：基準寸法 0.40 を確保 (PASS)
+  - name: pass_space_0p40
+    shapes:
+      WN:
+        - [-10.0, -10.0, 30.0, 30.0]
+      GC:
+        - [0.0, 0.0, 2.0, 10.0]
+      AP:
+        - [2.40, 0.0, 5.40, 10.0]
+    expected_violations: 0
+
+  # 異常系：隙間 0.35 (FAIL) -> 違反数: 1
+  - name: fail_space_0p35_single
+    shapes:
+      WN:
+        - [-10.0, -10.0, 30.0, 30.0]
+      GC:
+        - [0.0, 0.0, 2.0, 10.0]
+      AP:
+        - [2.35, 0.0, 5.35, 10.0]
+    expected_violations: 1
+
+  # 異常系：隙間 0.35 が2箇所 -> 違反数: 2
+  - name: fail_space_0p35_double
+    shapes:
+      WN:
+        - [-10.0, -10.0, 30.0, 30.0]
+      GC:
+        - [0.0, 0.0, 2.0, 10.0]
+      AP:
+        - [2.35, 0.0, 5.35, 10.0]
+        - [-3.35, 0.0, -0.35, 10.0]
+    expected_violations: 2

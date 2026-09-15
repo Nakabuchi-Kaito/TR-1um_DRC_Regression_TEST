@@ -1,0 +1,45 @@
+rule_id: GC.GR
+
+layers:
+  GC: { number: 8, datatype: 1 }
+  GR: { number: 8, datatype: 2 }
+
+allow_other_rules: false
+waive_rule_ids:
+  - GC.W1
+  - GC.S1
+  - GC.ANT
+  - GR.W1
+  - GR.S1
+  - GR.L1
+  - GA.CO
+  - RS.SZ
+
+cases:
+  # 正常系：基準寸法 1.20 を確保 (PASS)
+  - name: pass_space_1p20
+    shapes:
+      GC:
+        - [0.0, 0.0, 2.0, 10.0]
+      GR:
+        - [3.20, 0.0, 5.20, 10.0]
+    expected_violations: 0
+
+  # 異常系：隙間 1.15 (0.05不足でFAIL) -> 違反数: 1
+  - name: fail_space_1p15_single
+    shapes:
+      GC:
+        - [0.0, 0.0, 2.0, 10.0]
+      GR:
+        - [3.15, 0.0, 5.15, 10.0]
+    expected_violations: 1
+
+  # 異常系：隙間 1.15 が2箇所 -> 違反数: 2
+  - name: fail_space_1p15_double
+    shapes:
+      GC:
+        - [0.0, 0.0, 2.0, 10.0]
+      GR:
+        - [3.15, 0.0, 5.15, 10.0]
+        - [-3.15, 0.0, -1.15, 10.0]
+    expected_violations: 2

@@ -1,0 +1,46 @@
+rule_id: GA.BG
+
+layers:
+  GC: { number: 8, datatype: 1 }
+  AP: { number: 3, datatype: 1 }
+  CO: { number: 11, datatype: 0 }
+
+allow_other_rules: false
+waive_rule_ids:
+  - GC.W1
+  - GC.S1
+  - GC.ANT
+  - AP.W1
+  - AP.S1
+  - DP.W1
+  - DP.AP
+  - GA.AP
+  - GA.CO
+  - CO.W1
+  - CO.AP
+  - CO.GC
+  - CO.Z1
+  - CO.Z3
+
+cases:
+  # 正常系：GC と AP(BG) が重ならずに離れている (PASS)
+  - name: pass_no_overlap
+    shapes:
+      AP:
+        - [0.0, 0.0, 4.0, 4.0]
+      GC:
+        - [6.0, 0.0, 8.0, 4.0]
+      CO:
+        - [6.5, 1.0, 7.5, 2.0] # GA.CO回避用
+    expected_violations: 0
+
+  # 異常系：AP(BG) の上に GC が重なっている (FAIL) -> 違反数: 1
+  - name: fail_bg_over_ga
+    shapes:
+      AP:
+        - [0.0, 0.0, 4.0, 4.0]
+      GC:
+        - [1.0, -2.0, 3.0, 6.0]
+      CO:
+        - [1.5, 4.5, 2.5, 5.5] # GA.CO回避用
+    expected_violations: 1

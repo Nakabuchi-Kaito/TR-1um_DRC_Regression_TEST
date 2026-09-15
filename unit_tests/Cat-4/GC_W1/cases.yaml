@@ -11,6 +11,8 @@ waive_rule_ids:
   - GC.R1
   - GC.R2
   - GC.ANT
+  - GA.CO
+  
 
 cases:
   # ==========================================

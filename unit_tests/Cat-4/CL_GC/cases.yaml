@@ -1,0 +1,47 @@
+rule_id: CL.GC
+
+layers:
+  CO: { number: 11, datatype: 0 }
+  GC: { number: 8, datatype: 1 }
+  AP: { number: 3, datatype: 1 }
+  WN: { number: 140, datatype: 0 }
+
+allow_other_rules: false
+waive_rule_ids:
+  - CO.W1
+  - CO.S1
+  - CO.Z1
+  - CO.Z3
+  - CO.AP
+  - CO.GC
+  - CO.WD
+  - GC.W1
+  - GC.S1
+  - GC.ANT
+  - GA.CO
+  - AP.W1
+  - AP.S1
+  - AP.WN
+  - WN.W1
+  - WN.S1
+
+cases:
+  # 正常系：CO(L) が AP 上に配置 (GC上にないため PASS)
+  - name: pass_col_on_ap
+    shapes:
+      WN:
+        - [-5.0, -5.0, 15.0, 15.0]
+      AP:
+        - [0.0, 0.0, 10.0, 10.0]
+      CO:
+        - [2.0, 2.0, 4.0, 4.0] # Area=4.0um2 >= 1.5um2
+    expected_violations: 0
+
+  # 異常系：CO(L) が GC 上に配置 (Prohibit違反) -> 違反数: 1
+  - name: fail_col_on_gc
+    shapes:
+      GC:
+        - [0.0, 0.0, 10.0, 10.0]
+      CO:
+        - [2.0, 2.0, 4.0, 4.0] # Area=4.0um2
+    expected_violations: 1

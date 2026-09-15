@@ -1,0 +1,39 @@
+rule_id: CO.WB
+
+layers:
+  CO: { number: 11, datatype: 0 }
+  AP: { number: 3, datatype: 1 }
+
+allow_other_rules: false
+waive_rule_ids:
+  - CO.W1
+  - CO.S1
+  - CO.AP
+  - CO.Z1
+  - CO.Z3
+  - AP.W1
+  - AP.S1
+  - DP.W1
+  - DP.AP
+  - GA.BG
+  - GA.CO
+  - GC.ANT
+
+cases:
+  # 正常系：1.0 x 1.0 正方形 (PASS)
+  - name: pass_wfix_1p0
+    shapes:
+      AP:
+        - [0.0, 0.0, 6.0, 6.0]
+      CO:
+        - [2.0, 2.0, 3.0, 3.0]
+    expected_violations: 0
+
+  # 異常系：幅 0.95 x 1.0 (Wfix違反) -> 違反数: 2
+  - name: fail_wfix_0p95
+    shapes:
+      AP:
+        - [0.0, 0.0, 6.0, 6.0]
+      CO:
+        - [2.0, 2.0, 2.95, 3.0]
+    expected_violations: 2

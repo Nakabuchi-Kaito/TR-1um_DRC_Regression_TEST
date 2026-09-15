@@ -1,0 +1,50 @@
+rule_id: CO.WM
+
+layers:
+  CO: { number: 11, datatype: 0 }
+  AN: { number: 3, datatype: 2 }
+  GC: { number: 8, datatype: 1 }
+
+allow_other_rules: false
+waive_rule_ids:
+  - CO.W1
+  - CO.S1
+  - CO.AN
+  - CO.GC
+  - CO.GG
+  - CO.SM
+  - CO.Z3
+  - GC.W1
+  - GC.S1
+  - GC.EN
+  - GC.ANT
+  - GA.CO
+  - AN.W1
+  - AN.S1
+  - AN.WM
+  - AN.LM
+  - DN.W1
+  - DN.AN
+
+cases:
+  # 正常系：1.0 x 1.0 正方形 (PASS)
+  - name: pass_wfix_1p0
+    shapes:
+      AN:
+        - [0.0, 0.0, 10.0, 6.0]
+      GC:
+        - [5.0, -2.0, 6.0, 8.0]
+      CO:
+        - [1.5, 1.5, 2.5, 2.5]
+    expected_violations: 0
+
+  # 異常系：幅 0.95 x 1.0 (Wfix違反) -> 違反数: 1 (または2)
+  - name: fail_wfix_0p95
+    shapes:
+      AN:
+        - [0.0, 0.0, 10.0, 6.0]
+      GC:
+        - [5.0, -2.0, 6.0, 8.0]
+      CO:
+        - [1.5, 1.5, 2.45, 2.5]
+    expected_violations: 2

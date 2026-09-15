@@ -8,16 +8,18 @@ layers:
 
 allow_other_rules: false
 waive_rule_ids:
-  # 今回の囲みチェックに無関係な単体ルールや浮きエラーをすべて無視
-  - CO.W1
   - CO.S1
+  - CO.W1
   - CO.Z1
   - CO.Z3
-  - GC.W1
   - GC.S1
-  - GR.W1
-  - GR.S1
+  - GC.W1
   - GR.L1
+  - GR.S1
+  - GR.W1
+  - GC.ANT   # 追加
+  - CO.GR    # 追加
+  - CO.GS    # 追加
 
 cases:
   # ==========================================
