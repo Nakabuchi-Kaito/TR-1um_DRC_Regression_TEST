@@ -1,4 +1,4 @@
-rule_id: GR.L1
+rule_id: RS.RT
 
 layers:
   GR: { number: 8, datatype: 2 }
@@ -7,7 +7,6 @@ layers:
 allow_other_rules: false
 waive_rule_ids:
   - CL.GC
-  - CO.GC
   - CO.GR
   - CO.GS
   - CO.RT
@@ -17,20 +16,12 @@ waive_rule_ids:
   - CO.Z3
   - GA.BG
   - GA.CO
-  - GC.ANT
   - GC.GR
-  - GC.R1
-  - GC.R2
-  - GC.S1
-  - GC.W1
   - GR.AN
   - GR.AP
+  - GR.L1
   - GR.S1
   - GR.W1
-  - M1.CL
-  - M1.S1
-  - M1.W1
-  - RS.RT
   - RS.SZ
   - "[EXT] Invalid RS. Check CO spacing and enclosure."
   - "[EXT] can not extract RS if GR enclosure of merged CO > 2.0"
@@ -38,37 +29,42 @@ waive_rule_ids:
 
 cases:
   # ==========================================
-  # 正常系：長さ 50.0 (PASS)
+  # 正常系：長方形 (PASS)
   # ==========================================
-  - name: pass_length_50p0
+  - name: pass_rect
     shapes:
       GR:
-        - [0.0, 0.0, 4.0, 50.0]
+        - [0.0, 0.0, 4.0, 30.0]
       CO:
         - [1.5, 1.0, 2.5, 2.0]
-        - [1.5, 48.0, 2.5, 49.0]
+        - [1.5, 28.0, 2.5, 29.0]
     expected_violations: 0
 
   # ==========================================
-  # 異常系①：長さ 19.95 (0.05不足でFAIL) -> 違反数: 2
+  # 異常系①：凸型非矩形 (FAIL: 1)
+  # ※ デッキ側前段処理(.rectangles)のデッドロックにより Actual: 0 となる
   # ==========================================
-  - name: fail_lmin_19p95
+  - name: fail_convex_bump
     shapes:
       GR:
-        - [0.0, 0.0, 4.0, 19.95]
+        - [0.0, 0.0, 4.0, 30.0]
+        - [4.0, 10.0, 5.0, 20.0]
       CO:
         - [1.5, 1.0, 2.5, 2.0]
-        - [1.5, 17.95, 2.5, 18.95]
-    expected_violations: 2
+        - [1.5, 28.0, 2.5, 29.0]
+    expected_violations: 1
 
   # ==========================================
-  # 異常系②：CO間有効長 100.10 (0.10超過でFAIL) -> 違反数: 2
+  # 異常系②：凹型非矩形 (FAIL: 1)
+  # ※ デッキ側前段処理(.rectangles)のデッドロックにより Actual: 0 となる
   # ==========================================
-  - name: fail_lmax_100p10
+  - name: fail_concave_notch
     shapes:
       GR:
-        - [0.0, 0.0, 4.0, 104.10]
+        - [0.0, 0.0, 4.0, 10.0]
+        - [0.0, 20.0, 4.0, 30.0]
+        - [0.0, 10.0, 3.0, 20.0]
       CO:
         - [1.5, 1.0, 2.5, 2.0]
-        - [1.5, 102.10, 2.5, 103.10] # CO間距離: 102.10 - 2.0 = 100.10
-    expected_violations: 2
+        - [1.5, 28.0, 2.5, 29.0]
+    expected_violations: 1

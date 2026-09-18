@@ -7,15 +7,19 @@ layers:
 
 allow_other_rules: false
 waive_rule_ids:
+  - AR.GC
   - AR.L1
   - AR.PW
   - AR.S1
   - AR.W1
   - AR.WR
   - AR.XY
+  - GA.CO
+  - GC.ANT
   - GC.R2
   - GC.S1
   - GC.W1
+  - RR.SZ
   - WN.AN
   - WN.AP
   - WN.S1

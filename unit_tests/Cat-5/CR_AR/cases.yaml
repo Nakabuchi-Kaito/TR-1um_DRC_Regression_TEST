@@ -1,0 +1,90 @@
+rule_id: CR.AR
+
+layers:
+  WN: { number: 140, datatype: 0 }
+  AR: { number: 3, datatype: 3 }
+  CO: { number: 11, datatype: 0 }
+
+allow_other_rules: false
+waive_rule_ids:
+  - AR.GC
+  - AR.L1
+  - AR.S1
+  - AR.W1
+  - AR.WR
+  - AR.XY
+  - CL.GC
+  - CO.S1
+  - CO.W1
+  - CO.Z1
+  - CO.Z3
+  - CR.ASN
+  - CR.ASW
+  - CR.AT
+  - CR.W1
+  - CR.W2
+  - CR.W3
+  - ERR01
+  - GA.BG
+  - GA.CO
+  - GC.R1
+  - RR.RT
+  - RR.SZ
+  - WN.S1
+  - WN.W1
+  - WN.Z1
+  - "[EXT] Invalid RR. Check CO enclosure."
+  - "[EXT] Only one CO per RR terminal allowed."
+  - "[EXT] can not extract RR if AR enclosure of CO > 2.0"
+
+cases:
+  # ===================================================
+  # 正常系：オクタゴン斜め線との法線距離 0.813um (>= 0.80) -> PASS
+  # 全座標 0.05um グリッド適合
+  # ===================================================
+  - name: pass_enclose_0p80
+    shapes:
+      WN:
+        - [-10.0, -10.0, 20.0, 45.0]
+      AR:
+        - type: octagon
+          box: [0.0, 0.0, 4.0, 30.0]
+          cut: 1.00
+      CO:
+        - [1.85, 1.00, 2.85, 2.00]     # 下端端子 (マージン 0.813um)
+        - [1.85, 28.00, 2.85, 29.00]   # 上端端子 (マージン 0.813um)
+    expected_violations: 0
+
+  # ===================================================
+  # 異常系①：上端COの右上角のみ斜め線との距離 0.778um (< 0.80)
+  # ※ 直交する2辺からエラーが出るため違反数は 2
+  # ===================================================
+  - name: fail_enclose_0p75_single
+    shapes:
+      WN:
+        - [-10.0, -10.0, 20.0, 45.0]
+      AR:
+        - type: octagon
+          box: [0.0, 0.0, 4.0, 30.0]
+          cut: 1.00
+      CO:
+        - [1.85, 1.00, 2.85, 2.00]     # 下端端子 (正常: 0.813um)
+        - [1.90, 28.00, 2.90, 29.00]   # 上端端子 (右上角が 0.778um で違反)
+    expected_violations: 2
+
+  # ===================================================
+  # 異常系②：上下COの右側角の斜め線距離が各 0.778um (< 0.80)
+  # ※ 2コーナー x 各2辺 = 違反数は 4
+  # ===================================================
+  - name: fail_enclose_0p75_double
+    shapes:
+      WN:
+        - [-10.0, -10.0, 20.0, 45.0]
+      AR:
+        - type: octagon
+          box: [0.0, 0.0, 4.0, 30.0]
+          cut: 1.00
+      CO:
+        - [1.90, 1.00, 2.90, 2.00]     # 下端端子 (右下角が 0.778um で違反)
+        - [1.90, 28.00, 2.90, 29.00]   # 上端端子 (右上角が 0.778um で違反)
+    expected_violations: 4

@@ -1,37 +1,80 @@
 rule_id: CR.W1
 
 layers:
+  WN: { number: 140, datatype: 0 }
+  AR: { number: 3, datatype: 3 }
   CO: { number: 11, datatype: 0 }
-  AR: { number: 3, datatype: 3 } # CO(RR)判定用下地
 
 allow_other_rules: false
 waive_rule_ids:
-  - CO.Z1
-  - CO.S1
-  - AR.L1
-  - AR.XY
+  - WN.W1
+  - WN.S1
+  - WN.Z1
   - AR.W1
-  - CO.W1
-  - CO.Z3
-  - CR.W2
+  - AR.L1
+  - AR.S1
+  - AR.WR
+  - AR.GC
+  - AR.XY
+  - RR.SZ
+  - RR.RT
   - GC.R1
-  - GC.R2
+  - GA.CO
+  - GA.BG
+  - CL.GC
+  - CR.W2
+  - CR.W3
+  - CR.AR
+  - CR.AT
+  - CR.ASN
+  - CR.ASW
+  - CO.W1
+  - CO.S1
+  - CO.Z1
+  - CO.Z3
+  - "[EXT] Invalid RR. Check CO enclosure."
+  - "[EXT] Only one CO per RR terminal allowed."
+  - "[EXT] can not extract RR if AR enclosure of CO > 2.0"
 
 cases:
   # ==========================================
-  # 正常系：COの短辺を 1.0 にする -> PASS
+  # 正常系：幅 1.00 x 1.00 (PASS)
   # ==========================================
-  - name: pass_width_1p0
+  - name: pass_wmin_1p00
     shapes:
-      AR: [-5.0, -5.0, 15.0, 15.0] # AR下地
-      CO: [0.0, 0.0, 1.0, 5.0]     # 短辺が1.0、長辺が5.0
+      WN:
+        - [-10.0, -10.0, 20.0, 40.0]
+      AR:
+        - [0.0, 0.0, 2.8, 30.0]
+      CO:
+        - [0.90, 1.50, 1.90, 2.50]   # 1.00 x 1.00
+        - [0.90, 27.50, 1.90, 28.50]
     expected_violations: 0
 
   # ==========================================
-  # 異常系：COの短辺を 0.95 にする (< 1.0)
+  # 異常系①：幅 0.95 (0.05不足でFAIL) -> 違反数: 1
   # ==========================================
-  - name: fail_width_0p95
+  - name: fail_wmin_0p95_single
     shapes:
-      AR: [-5.0, -5.0, 15.0, 15.0]
-      CO: [0.0, 0.0, 0.95, 5.0]    # 短辺が0.95
+      WN:
+        - [-10.0, -10.0, 20.0, 40.0]
+      AR:
+        - [0.0, 0.0, 2.8, 30.0]
+      CO:
+        - [0.90, 1.50, 1.85, 2.50]   # X幅: 1.85 - 0.90 = 0.95
+        - [0.90, 27.50, 1.90, 28.50]
     expected_violations: 1
+
+  # ==========================================
+  # 異常系②：上下2個のCOで幅 0.95 -> 違反数: 2
+  # ==========================================
+  - name: fail_wmin_0p95_double
+    shapes:
+      WN:
+        - [-10.0, -10.0, 20.0, 40.0]
+      AR:
+        - [0.0, 0.0, 2.8, 30.0]
+      CO:
+        - [0.90, 1.50, 1.85, 2.50]
+        - [0.90, 27.50, 1.85, 28.50]
+    expected_violations: 2

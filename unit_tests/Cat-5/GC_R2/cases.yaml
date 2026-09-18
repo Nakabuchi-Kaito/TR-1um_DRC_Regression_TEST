@@ -10,21 +10,27 @@ layers:
 
 allow_other_rules: false
 waive_rule_ids:
-  - AR.XY
+  - AN.WR
+  - AR.GC
   - AR.L1
   - AR.W1
-  - AR.WR  # WNとARの囲みルールの無視
-  - GC.R1
-  - GC.W1
-  - GC.S1
-  - CO.W1
+  - AR.WR
+  - AR.XY
   - CO.S1
-  - M1.W1
+  - CO.W1
+  - GA.CO
+  - GC.ANT
+  - GC.R1
+  - GC.S1
+  - GC.W1
+  - M1.CO
   - M1.S1
-  - M1.CO  # M1とCOの囲みルールの無視
-  - WN.Z1
+  - M1.W1
+  - RR.SZ
   - WN.S1
   - WN.W1
+  - WN.Z1
+  - "[EXT] Invalid RR. Check CO enclosure."
 
 cases:
   # ==========================================

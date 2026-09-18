@@ -1,0 +1,94 @@
+rule_id: CR.ASN
+
+layers:
+  AR: { number: 3, datatype: 3 }
+  CO: { number: 11, datatype: 0 }
+  WN: { number: 140, datatype: 0 }
+
+allow_other_rules: false
+waive_rule_ids:
+  - WN.W1
+  - WN.S1
+  - WN.Z1
+  - AR.W1
+  - AR.L1
+  - AR.S1
+  - AR.WR
+  - AR.GC
+  - AR.XY
+  - RR.SZ
+  - RR.RT
+  - GC.R1
+  - GA.CO
+  - GA.BG
+  - CL.GC
+  - CR.W1
+  - CR.W2
+  - CR.W3
+  - CR.AR
+  - CR.AT
+  - CR.ASW
+  - CO.W1
+  - CO.S1
+  - CO.Z1
+  - CO.Z3
+  - "[EXT] Invalid RR. Check CO enclosure."
+  - "[EXT] Only one CO per RR terminal allowed."
+  - "[EXT] can not extract RR if AR enclosure of CO > 2.0"
+
+cases:
+  # ==========================================
+  # 正常系：左右マージン 0.90 固定 (PASS)
+  # ==========================================
+  - name: pass_margin_0p90
+    shapes:
+      WN:
+        - [-10.0, -10.0, 20.0, 40.0]
+      AR:
+        - [0.0, 0.0, 2.8, 30.0]
+      CO:
+        - [0.9, 1.5, 1.9, 2.5]       # 左 0.90, 右 0.90
+        - [0.9, 27.5, 1.9, 28.5]
+    expected_violations: 0
+
+  # ==========================================
+  # 異常系①：左 0.90 (正常) / 右 0.85 (0.05不足) -> 違反数: 1
+  # ==========================================
+  - name: fail_margin_0p85_single_edge
+    shapes:
+      WN:
+        - [-10.0, -10.0, 20.0, 40.0]
+      AR:
+        - [0.0, 0.0, 2.8, 30.0]
+      CO:
+        - [0.90, 1.5, 1.95, 2.5]     # 下端CO: 左0.90(OK) / 右0.85(NG: 1エッジ)
+        - [0.90, 27.5, 1.90, 28.5]   # 上端CO: 左右0.90(OK)
+    expected_violations: 1
+
+  # ==========================================
+  # 異常系②：左 0.90 (正常) / 右 0.95 (0.05超過) -> 違反数: 1
+  # ==========================================
+  - name: fail_margin_0p95_single_edge
+    shapes:
+      WN:
+        - [-10.0, -10.0, 20.0, 40.0]
+      AR:
+        - [0.0, 0.0, 2.8, 30.0]
+      CO:
+        - [0.90, 1.5, 1.85, 2.5]     # 下端CO: 左0.90(OK) / 右0.95(NG: 1エッジ)
+        - [0.90, 27.5, 1.90, 28.5]   # 上端CO: 左右0.90(OK)
+    expected_violations: 1
+
+  # ==========================================
+  # 異常系③：上下両方のCOで右側のみ 0.85 -> 違反数: 2
+  # ==========================================
+  - name: fail_margin_0p85_double_edge
+    shapes:
+      WN:
+        - [-10.0, -10.0, 20.0, 40.0]
+      AR:
+        - [0.0, 0.0, 2.8, 30.0]
+      CO:
+        - [0.90, 1.5, 1.95, 2.5]     # 下端CO: 右0.85(NG)
+        - [0.90, 27.5, 1.95, 28.5]   # 上端CO: 右0.85(NG)
+    expected_violations: 2

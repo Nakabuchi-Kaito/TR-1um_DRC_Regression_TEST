@@ -1,0 +1,77 @@
+rule_id: CO.GS
+
+layers:
+  GR: { number: 8, datatype: 2 }
+  CO: { number: 11, datatype: 0 }
+
+allow_other_rules: false
+waive_rule_ids:
+  - GR.W1
+  - GR.L1
+  - GR.S1
+  - GR.AP
+  - GR.AN
+  - RS.SZ
+  - RS.RT
+  - GC.GR
+  - GA.CO
+  - GA.BG
+  - CL.GC
+  - CO.W1
+  - CO.S1
+  - CO.GR
+  - CO.RT
+  - CO.Z1
+  - CO.Z3
+  - "[EXT] Invalid RS. Check CO spacing and enclosure."
+  - "[EXT] merged CO error. Only one merged CO per RS terminal allowed. Use minimum CO space."
+  - "[EXT] can not extract RS if GR enclosure of merged CO > 2.0"
+
+cases:
+  # ==========================================
+  # 正常系：左右マージン 1.50 固定 (PASS)
+  # ==========================================
+  - name: pass_margin_1p50
+    shapes:
+      GR:
+        - [0.0, 0.0, 4.0, 30.0]
+      CO:
+        - [1.50, 1.0, 2.50, 2.0]     # 左右マージン: 1.50 (4.0 - 2.5 = 1.5)
+        - [1.50, 28.0, 2.50, 29.0]
+    expected_violations: 0
+
+  # ==========================================
+  # 異常系①：左 1.50 (正常) / 右 1.45 (0.05不足) -> 違反数: 1
+  # ==========================================
+  - name: fail_margin_1p45_single_edge
+    shapes:
+      GR:
+        - [0.0, 0.0, 4.0, 30.0]
+      CO:
+        - [1.50, 1.0, 2.55, 2.0]     # 下端CO: 左1.50(OK) / 右1.45(NG: 1エッジ)
+        - [1.50, 28.0, 2.50, 29.0]   # 上端CO: 左右1.50(OK)
+    expected_violations: 1
+
+  # ==========================================
+  # 異常系②：左 1.50 (正常) / 右 1.55 (0.05超過) -> 違反数: 1
+  # ==========================================
+  - name: fail_margin_1p55_single_edge
+    shapes:
+      GR:
+        - [0.0, 0.0, 4.0, 30.0]
+      CO:
+        - [1.50, 1.0, 2.45, 2.0]     # 下端CO: 左1.50(OK) / 右1.55(NG: 1エッジ)
+        - [1.50, 28.0, 2.50, 29.0]   # 上端CO: 左右1.50(OK)
+    expected_violations: 1
+
+  # ==========================================
+  # 異常系③：上下両方のCOで右側のみ 1.45 -> 違反数: 2
+  # ==========================================
+  - name: fail_margin_1p45_double_edge
+    shapes:
+      GR:
+        - [0.0, 0.0, 4.0, 30.0]
+      CO:
+        - [1.50, 1.0, 2.55, 2.0]     # 下端CO: 右1.45(NG)
+        - [1.50, 28.0, 2.55, 29.0]   # 上端CO: 右1.45(NG)
+    expected_violations: 2

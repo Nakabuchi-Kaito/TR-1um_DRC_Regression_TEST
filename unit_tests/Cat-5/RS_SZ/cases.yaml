@@ -1,0 +1,91 @@
+rule_id: RS.SZ
+
+layers:
+  GR: { number: 8, datatype: 2 }
+  CO: { number: 11, datatype: 0 }
+
+allow_other_rules: false
+waive_rule_ids:
+  - GR.W1
+  - GR.L1
+  - GR.S1
+  - GR.AP
+  - GR.AN
+  - RS.RT
+  - GC.GR
+  - GA.CO
+  - GA.BG
+  - CO.W1
+  - CO.S1
+  - CO.GR
+  - CO.GS
+  - CO.RT
+  - CO.Z1
+  - CO.Z3
+  - CL.GC
+  - "[EXT] Invalid RS. Check CO spacing and enclosure."
+  - "[EXT] merged CO error. Only one merged CO per RS terminal allowed. Use minimum CO space."
+  - "[EXT] can not extract RS if GR enclosure of merged CO > 2.0"
+
+cases:
+  # ==========================================
+  # 正常系（PASS）：RSOK 規定幅 4 パターン
+  # ==========================================
+  - name: pass_width_4p0
+    shapes:
+      GR:
+        - [0.0, 0.0, 4.0, 30.0]
+      CO:
+        - [1.5, 1.0, 2.5, 2.0]
+        - [1.5, 28.0, 2.5, 29.0]
+    expected_violations: 0
+
+  - name: pass_width_6p0
+    shapes:
+      GR:
+        - [0.0, 0.0, 6.0, 30.0]
+      CO:
+        - [1.5, 1.0, 4.5, 2.0]       # CO.GS 1.5 確保（幅3.0スリット）
+        - [1.5, 28.0, 4.5, 29.0]
+    expected_violations: 0
+
+  - name: pass_width_12p0
+    shapes:
+      GR:
+        - [0.0, 0.0, 12.0, 30.0]
+      CO:
+        - [1.5, 1.0, 10.5, 2.0]      # CO.GS 1.5 確保（幅9.0スリット）
+        - [1.5, 28.0, 10.5, 29.0]
+    expected_violations: 0
+
+  - name: pass_width_20p0
+    shapes:
+      GR:
+        - [0.0, 0.0, 20.0, 30.0]
+      CO:
+        - [1.5, 1.0, 18.5, 2.0]      # CO.GS 1.5 確保（幅17.0スリット）
+        - [1.5, 28.0, 18.5, 29.0]
+    expected_violations: 0
+
+  # ==========================================
+  # 異常系（FAIL）：RSOK 非許可幅パターン
+  # ==========================================
+  # 幅 2.8（AR専用幅のため GR/RS では FAIL）
+  - name: fail_width_2p8_ar_only
+    shapes:
+      GR:
+        - [0.0, 0.0, 2.8, 30.0]
+      CO:
+        - [0.9, 1.0, 1.9, 2.0]
+        - [0.9, 28.0, 1.9, 29.0]
+    expected_violations: 1
+
+  # 幅 5.0（規定外寸法で FAIL）
+  - name: fail_width_5p0_not_allowed
+    shapes:
+      GR:
+        - [0.0, 0.0, 5.0, 30.0]
+      CO:
+        - [1.5, 1.0, 3.5, 2.0]
+        - [1.5, 28.0, 3.5, 29.0]
+    expected_violations: 1

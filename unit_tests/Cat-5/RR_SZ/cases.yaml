@@ -1,0 +1,119 @@
+rule_id: RR.SZ
+
+layers:
+  AR: { number: 3, datatype: 3 }
+  CO: { number: 11, datatype: 0 }
+  WN: { number: 140, datatype: 0 }
+
+allow_other_rules: false
+waive_rule_ids:
+  - WN.W1
+  - WN.S1
+  - WN.Z1
+  - AR.W1
+  - AR.L1
+  - AR.S1
+  - AR.WR
+  - AR.GC
+  - AR.XY
+  - RR.RT
+  - GC.R1
+  - GA.CO
+  - GA.BG
+  - CL.GC
+  - CR.W1
+  - CR.W2
+  - CR.W3
+  - CR.AR
+  - CR.AT
+  - CR.ASN
+  - CR.ASW
+  - CO.W1
+  - CO.S1
+  - CO.Z1
+  - CO.Z3
+  - "[EXT] Invalid RR. Check CO spacing and enclosure."
+
+cases:
+  # ==========================================
+  # 正常系（PASS）：RROK 規定幅 5 パターン
+  # ==========================================
+  - name: pass_width_2p8
+    shapes:
+      WN:
+        - [-10.0, -10.0, 20.0, 40.0]
+      AR:
+        - [0.0, 0.0, 2.8, 30.0]
+      CO:
+        - [0.9, 1.5, 1.9, 2.5]
+        - [0.9, 27.5, 1.9, 28.5]
+    expected_violations: 0
+
+  - name: pass_width_4p0
+    shapes:
+      WN:
+        - [-10.0, -10.0, 20.0, 40.0]
+      AR:
+        - [0.0, 0.0, 4.0, 30.0]
+      CO:
+        - [1.2, 1.5, 2.8, 2.5]
+        - [1.2, 27.5, 2.8, 28.5]
+    expected_violations: 0
+
+  - name: pass_width_6p0
+    shapes:
+      WN:
+        - [-10.0, -10.0, 20.0, 40.0]
+      AR:
+        - [0.0, 0.0, 6.0, 30.0]
+      CO:
+        - [1.2, 1.5, 4.8, 2.5]
+        - [1.2, 27.5, 4.8, 28.5]
+    expected_violations: 0
+
+  - name: pass_width_12p0
+    shapes:
+      WN:
+        - [-10.0, -10.0, 30.0, 40.0]
+      AR:
+        - [0.0, 0.0, 12.0, 30.0]
+      CO:
+        - [1.2, 1.5, 10.8, 2.5]
+        - [1.2, 27.5, 10.8, 28.5]
+    expected_violations: 0
+
+  - name: pass_width_20p0
+    shapes:
+      WN:
+        - [-10.0, -10.0, 40.0, 40.0]
+      AR:
+        - [0.0, 0.0, 20.0, 30.0]
+      CO:
+        - [1.2, 1.5, 18.8, 2.5]
+        - [1.2, 27.5, 18.8, 28.5]
+    expected_violations: 0
+
+  # ==========================================
+  # 異常系（FAIL）：RROK 非許可幅パターン
+  # ==========================================
+  - name: fail_width_5p0_not_allowed
+    shapes:
+      WN:
+        - [-10.0, -10.0, 20.0, 40.0]
+      AR:
+        - [0.0, 0.0, 5.0, 30.0]
+      CO:
+        - [1.2, 1.5, 3.8, 2.5]
+        - [1.2, 27.5, 3.8, 28.5]
+    expected_violations: 1
+
+  - name: fail_width_3p5_not_allowed
+    shapes:
+      WN:
+        - [-10.0, -10.0, 20.0, 40.0]
+      AR:
+        - [0.0, 0.0, 3.5, 30.0]
+      CO:
+        - [1.0, 1.5, 2.5, 2.5]
+        - [1.0, 27.5, 2.5, 28.5]
+    expected_violations: 1
