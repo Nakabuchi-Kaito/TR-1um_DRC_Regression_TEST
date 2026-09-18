@@ -1,0 +1,50 @@
+rule_id: CO.CL
+
+layers:
+  CO: { number: 11, datatype: 0 }
+  GC: { number: 8, datatype: 1 }
+
+allow_other_rules: false
+waive_rule_ids:
+  - CO.W1
+  - CO.S1
+  - CO.Z1
+  - CO.Z3
+  - CO.GC
+  - CL.GC
+  - GC.W1
+  - GC.S1
+  - GC.ANT
+  - GA.CO
+
+cases:
+  # 正常系：CO(L)(2.0x1.0=2.0um2) と CO(1.0x1.0) の間隔 1.60 (PASS)
+  - name: pass_space_1p60
+    shapes:
+      GC:
+        - [-5.0, -5.0, 20.0, 15.0]
+      CO:
+        - [0.0, 0.0, 2.0, 1.0]     # CO(L)
+        - [3.60, 0.0, 4.60, 1.0]   # CO (隙間 1.60)
+    expected_violations: 0
+
+  # 異常系：隙間 1.55 (0.05不足) -> 違反数: 1
+  - name: fail_space_1p55_single
+    shapes:
+      GC:
+        - [-5.0, -5.0, 20.0, 15.0]
+      CO:
+        - [0.0, 0.0, 2.0, 1.0]     # CO(L)
+        - [3.55, 0.0, 4.55, 1.0]   # CO (隙間 1.55)
+    expected_violations: 1
+
+  # 異常系：隙間 1.55 が2箇所 -> 違反数: 2
+  - name: fail_space_1p55_double
+    shapes:
+      GC:
+        - [-10.0, -5.0, 20.0, 15.0]
+      CO:
+        - [0.0, 0.0, 2.0, 1.0]     # CO(L)
+        - [3.55, 0.0, 4.55, 1.0]   # 右側 CO (隙間 1.55)
+        - [-2.55, 0.0, -1.55, 1.0] # 左側 CO (隙間 1.55)
+    expected_violations: 2

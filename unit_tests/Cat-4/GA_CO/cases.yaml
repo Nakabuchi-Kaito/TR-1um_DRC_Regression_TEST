@@ -1,0 +1,40 @@
+rule_id: GA.CO
+
+layers:
+  GC: { number: 8, datatype: 1 }
+  CO: { number: 11, datatype: 0 }
+
+allow_other_rules: false
+waive_rule_ids:
+  - GC.W1
+  - GC.S1
+  - GC.ANT
+  - CO.W1
+  - CO.GC
+  - CO.Z1
+  - CO.Z3
+
+cases:
+  # 正常系：GC 上に CO が配置されている (PASS)
+  - name: pass_gc_with_co
+    shapes:
+      GC:
+        - [0.0, 0.0, 2.0, 5.0]
+      CO:
+        - [0.5, 1.0, 1.5, 2.0]
+    expected_violations: 0
+
+  # 異常系①：CO が載っていない GC が1個 (FAIL) -> 違反数: 1
+  - name: fail_gc_without_co_single
+    shapes:
+      GC:
+        - [0.0, 0.0, 2.0, 5.0]
+    expected_violations: 1
+
+  # 異常系②：CO が載っていない GC が2個 (FAIL) -> 違反数: 2
+  - name: fail_gc_without_co_double
+    shapes:
+      GC:
+        - [0.0, 0.0, 2.0, 5.0]
+        - [5.0, 0.0, 7.0, 5.0]
+    expected_violations: 2
