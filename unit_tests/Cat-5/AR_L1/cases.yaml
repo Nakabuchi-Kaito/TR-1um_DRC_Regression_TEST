@@ -9,27 +9,40 @@ layers:
 
 allow_other_rules: false
 waive_rule_ids:
-  - AR.W1
+  - AR.GC
   - AR.S1
+  - AR.W1
   - AR.XY
-  - GC.R1
-  - GC.R2
-  - GC.W1
-  - GC.S1
-  - GR.L1
-  - GR.S1
-  - GR.W1
+  - CL.GC
   - CO.GC
+  - CO.GR
   - CO.S1
   - CO.W1
   - CO.Z1
   - CO.Z3
+  - CR.AR
+  - CR.ASN
+  - CR.ASW
+  - CR.AT
+  - CR.W1
+  - CR.W2
+  - CR.W3
+  - GA.BG
+  - GA.CO
+  - GC.ANT
+  - GC.GR
+  - GC.R1
+  - GC.R2
+  - GC.S1
+  - GC.W1
+  - GR.L1
+  - GR.S1
+  - GR.W1
   - M1.CL
+  - M1.CO
   - M1.S1
   - M1.W1
-  - CR.AS
-  - CR.W2
-  - CR.AT
+  - RR.SZ
 
 cases:
   # ==========================================

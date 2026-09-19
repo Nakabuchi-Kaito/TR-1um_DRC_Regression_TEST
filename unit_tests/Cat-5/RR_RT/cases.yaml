@@ -1,4 +1,4 @@
-rule_id: CR.AT
+rule_id: RR.RT
 
 layers:
   WN: { number: 140, datatype: 0 }
@@ -7,74 +7,79 @@ layers:
 
 allow_other_rules: false
 waive_rule_ids:
-  - WN.W1
-  - WN.S1
-  - WN.Z1
-  - AR.W1
+  - AR.GC
   - AR.L1
   - AR.S1
+  - AR.W1
   - AR.WR
-  - AR.GC
   - AR.XY
-  - RR.SZ
-  - RR.RT
-  - GC.R1
-  - GA.CO
-  - GA.BG
   - CL.GC
-  - CR.W1
-  - CR.W2
-  - CR.W3
+  - CO.S1
+  - CO.W1
+  - CO.Z1
+  - CO.Z3
   - CR.AR
   - CR.ASN
   - CR.ASW
-  - CO.W1
-  - CO.S1
-  - CO.Z1
-  - CO.Z3
+  - CR.AT
+  - CR.W1
+  - CR.W2
+  - CR.W3
+  - GA.BG
+  - GA.CO
+  - GC.R1
+  - RR.SZ
+  - WN.S1
+  - WN.W1
+  - WN.Z1
   - "[EXT] Invalid RR. Check CO enclosure."
   - "[EXT] Only one CO per RR terminal allowed."
   - "[EXT] can not extract RR if AR enclosure of CO > 2.0"
 
 cases:
   # ==========================================
-  # 正常系：端部マージン 1.50 (PASS)
+  # 正常系：長方形 (PASS)
   # ==========================================
-  - name: pass_margin_1p50
+  - name: pass_rect
     shapes:
       WN:
         - [-10.0, -10.0, 20.0, 40.0]
       AR:
         - [0.0, 0.0, 2.8, 30.0]
       CO:
-        - [0.90, 1.50, 1.90, 2.50]   # 下端マージン: 1.50 - 0.0 = 1.50
-        - [0.90, 27.50, 1.90, 28.50] # 上端マージン: 30.0 - 28.50 = 1.50
+        - [0.9, 1.5, 1.9, 2.5]
+        - [0.9, 27.5, 1.9, 28.5]
     expected_violations: 0
 
   # ==========================================
-  # 異常系①：下端マージン 1.45 (0.05不足でFAIL) -> 違反数: 1
+  # 異常系①：凸型非矩形 (FAIL: 1)
+  # ※ デッキ側前段処理(.rectangles)のデッドロックにより Actual: 0 となる
   # ==========================================
-  - name: fail_margin_1p45_single
+  - name: fail_convex_bump
     shapes:
       WN:
         - [-10.0, -10.0, 20.0, 40.0]
       AR:
         - [0.0, 0.0, 2.8, 30.0]
+        - [2.8, 10.0, 3.8, 20.0]
       CO:
-        - [0.90, 1.45, 1.90, 2.45]   # 下端マージン: 1.45 - 0.0 = 1.45
-        - [0.90, 27.50, 1.90, 28.50]
+        - [0.9, 1.5, 1.9, 2.5]
+        - [0.9, 27.5, 1.9, 28.5]
     expected_violations: 1
 
   # ==========================================
-  # 異常系②：上下端ともマージン 1.45 -> 違反数: 2
+  # 異常系②：凹型非矩形 (FAIL: 1)
+  # ※ デッキ側前段処理(.rectangles)のデッドロックにより Actual: 0 となる
   # ==========================================
-  - name: fail_margin_1p45_double
+  - name: fail_concave_notch
     shapes:
       WN:
         - [-10.0, -10.0, 20.0, 40.0]
       AR:
-        - [0.0, 0.0, 2.8, 30.0]
+        - [0.0, 0.0, 2.8, 10.0]
+        - [0.0, 20.0, 2.8, 30.0]
+        - [0.0, 10.0, 1.8, 20.0]
       CO:
-        - [0.90, 1.45, 1.90, 2.45]
-        - [0.90, 27.55, 1.90, 28.55] # 上端マージン: 30.0 - 28.55 = 1.45
-    expected_violations: 2
+        - [0.9, 1.5, 1.9, 2.5]
+        - [0.9, 27.5, 1.9, 28.5]
+    expected_violations: 1

@@ -1,0 +1,82 @@
+rule_id: CR.W3
+
+layers:
+  WN: { number: 140, datatype: 0 }
+  AR: { number: 3, datatype: 3 }
+  CO: { number: 11, datatype: 0 }
+
+allow_other_rules: false
+waive_rule_ids:
+  - AR.GC
+  - AR.L1
+  - AR.S1
+  - AR.W1
+  - AR.WR
+  - AR.XY
+  - CL.GC
+  - CO.S1
+  - CO.W1
+  - CO.Z1
+  - CO.Z3
+  - CR.AR
+  - CR.ASN
+  - CR.ASW
+  - CR.AT
+  - CR.W1
+  - CR.W2
+  - GA.BG
+  - GA.CO
+  - GC.R1
+  - RR.RT
+  - RR.SZ
+  - WN.S1
+  - WN.W1
+  - WN.Z1
+  - "[EXT] Invalid RR. Check CO enclosure."
+  - "[EXT] Only one CO per RR terminal allowed."
+  - "[EXT] can not extract RR if AR enclosure of CO > 2.0"
+
+cases:
+  # ==========================================
+  # 正常系：1.00 x 1.00 正方形コンタクト (PASS)
+  # ==========================================
+  - name: pass_wfix_1p00
+    shapes:
+      WN:
+        - [-10.0, -10.0, 20.0, 45.0]
+      AR:
+        - [0.0, 0.0, 2.8, 30.0]
+      CO:
+        - [0.90, 1.50, 1.90, 2.50]     # 1.00 x 1.00
+        - [0.90, 27.50, 1.90, 28.50]   # 1.00 x 1.00
+    expected_violations: 0
+
+  # ==========================================
+  # 異常系①：下端COの幅を 0.95 に縮小 (0.05不足)
+  # ※ width < 1.0 と bbox_min < 1.0 の両方が発火するため違反数は 2
+  # ==========================================
+  - name: fail_wfix_0p95_single
+    shapes:
+      WN:
+        - [-10.0, -10.0, 20.0, 45.0]
+      AR:
+        - [0.0, 0.0, 2.8, 30.0]
+      CO:
+        - [0.90, 1.50, 1.85, 2.50]     # 幅 0.95 x 長さ 1.00
+        - [0.90, 27.50, 1.90, 28.50]   # 正常端子 (1.00 x 1.00)
+    expected_violations: 2
+
+  # ==========================================
+  # 異常系②：下端COの長さを 1.05 に拡張 (0.05超過)
+  # ※ bbox_max > 1.0 が発火するため違反数は 1
+  # ==========================================
+  - name: fail_wfix_1p05_single
+    shapes:
+      WN:
+        - [-10.0, -10.0, 20.0, 45.0]
+      AR:
+        - [0.0, 0.0, 2.8, 30.0]
+      CO:
+        - [0.90, 1.50, 1.90, 2.55]     # 幅 1.00 x 長さ 1.05
+        - [0.90, 27.50, 1.90, 28.50]   # 正常端子 (1.00 x 1.00)
+    expected_violations: 1

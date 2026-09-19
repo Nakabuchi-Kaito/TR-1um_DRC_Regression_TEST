@@ -1,0 +1,63 @@
+rule_id: GR.AP
+
+layers:
+  GR: { number: 8, datatype: 2 }
+  AP: { number: 3, datatype: 1 }
+
+allow_other_rules: false
+waive_rule_ids:
+  - GR.W1
+  - GR.L1
+  - GR.S1
+  - RS.SZ
+  - RS.RT
+  - GC.GR
+  - AP.W1
+  - AP.S1
+  - AP.AN
+  - AP.WM
+  - AP.LM
+  - GA.AP
+  - GA.BG
+  - GA.CO
+  - WN.AP
+  - CO.GC
+  - CO.AP
+
+cases:
+  # 正常系：基準スペース 2.80 (PASS)
+  - name: pass_space_2p80
+    shapes:
+      GR:
+        - [0.0, 0.0, 5.0, 25.0]
+      AP:
+        - [7.8, 0.0, 12.8, 25.0]
+    expected_violations: 0
+
+  # 異常系：隙間 2.75 (0.05不足でFAIL) -> 違反数: 1
+  - name: fail_space_2p75_single
+    shapes:
+      GR:
+        - [0.0, 0.0, 5.0, 25.0]
+      AP:
+        - [7.75, 0.0, 12.75, 25.0]
+    expected_violations: 1
+
+  # 異常系：隙間 2.75 が2箇所 -> 違反数: 2
+  - name: fail_space_2p75_double
+    shapes:
+      GR:
+        - [0.0, 0.0, 5.0, 25.0]
+      AP:
+        - [7.75, 0.0, 12.75, 25.0]
+        - [-7.75, 0.0, -2.75, 25.0]
+    expected_violations: 2
+
+  # 異常系：重なり (Overlap) -> 違反数: 1
+  - name: fail_overlap
+    shapes:
+      GR:
+        - [0.0, 0.0, 5.0, 25.0]
+      AP:
+        - [4.0, 0.0, 9.0, 25.0]
+    expected_violations: 1

@@ -1,0 +1,66 @@
+rule_id: CO.GR
+
+layers:
+  GR: { number: 8, datatype: 2 }
+  CO: { number: 11, datatype: 0 }
+
+allow_other_rules: false
+waive_rule_ids:
+  - GR.W1
+  - GR.L1
+  - GR.S1
+  - GR.AP
+  - GR.AN
+  - RS.SZ
+  - RS.RT
+  - GC.GR
+  - GA.CO
+  - GA.BG
+  - CL.GC
+  - CO.W1
+  - CO.S1
+  - CO.GS
+  - CO.RT
+  - CO.Z1
+  - CO.Z3
+  - CO.GC
+  - "[EXT] Invalid RS. Check CO spacing and enclosure."
+  - "[EXT] merged CO error. Only one merged CO per RS terminal allowed. Use minimum CO space."
+  - "[EXT] can not extract RS if GR enclosure of merged CO > 2.0"
+
+cases:
+  # ==========================================
+  # 正常系：全周囲マージン >= 0.80 (左右1.5, 下端1.0) (PASS)
+  # ==========================================
+  - name: pass_enclose_0p80
+    shapes:
+      GR:
+        - [0.0, 0.0, 4.0, 30.0]
+      CO:
+        - [1.5, 1.0, 2.5, 2.0]
+        - [1.5, 28.0, 2.5, 29.0]
+    expected_violations: 0
+
+  # ==========================================
+  # 異常系①：左側マージン 0.75 (0.05不足でFAIL) -> 違反数: 1
+  # ==========================================
+  - name: fail_enclose_0p75_single
+    shapes:
+      GR:
+        - [0.0, 0.0, 4.0, 30.0]
+      CO:
+        - [0.75, 1.0, 1.75, 2.0]     # 左側 0.75 (0.75 - 0.0 = 0.75 < 0.80)
+        - [1.50, 28.0, 2.50, 29.0]
+    expected_violations: 1
+
+  # ==========================================
+  # 異常系②：上下両方のCOで左側マージン 0.75 -> 違反数: 2
+  # ==========================================
+  - name: fail_enclose_0p75_double
+    shapes:
+      GR:
+        - [0.0, 0.0, 4.0, 30.0]
+      CO:
+        - [0.75, 1.0, 1.75, 2.0]
+        - [0.75, 28.0, 1.75, 29.0]
+    expected_violations: 2
