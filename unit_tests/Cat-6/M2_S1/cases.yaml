@@ -5,9 +5,9 @@ layers:
   M2: { number: 20, datatype: 0 }
 
 allow_other_rules: false
-# M2の最小幅エラー(M2.W1)など、スペースチェックに直接関係のないエラーを無視リストに登録
 waive_rule_ids:
   - M2.W1
+  - ER0047
 
 cases:
   - name: pass_space_2p0

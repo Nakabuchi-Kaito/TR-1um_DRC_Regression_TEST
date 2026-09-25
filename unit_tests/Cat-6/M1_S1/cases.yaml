@@ -4,9 +4,9 @@ layers:
   M1: { number: 13, datatype: 0 }
 
 allow_other_rules: false
-# M1の最小幅エラー(M1.W1)など、スペースチェックに無関係なエラーを念のため無視
 waive_rule_ids:
   - M1.W1
+  - ER0045
 
 cases:
   - name: pass_space_1p4

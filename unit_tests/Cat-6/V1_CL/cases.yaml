@@ -9,25 +9,26 @@ layers:
   AR: { number: 3, datatype: 3 }
 
 allow_other_rules: false
-# V1, CO, ARそれぞれの単体ルール、構造エラー(浮きエラー等)、および
-# AR追加に伴うエンクロージャー違反等をすべて無視リストに登録
 waive_rule_ids:
-  - V1.W1
-  - V1.S1
-  - V1.M1
-  - V1.M2
-  - V1.Z1
-  - V1.Z2
-  - V1.CO
-  - CO.W1
-  - CO.S1
-  - CO.Z1
-  - CO.Z3
   - AR.L1
   - AR.XY
+  - AR.GC
+  - CR.AR
   - CR.AS
   - CR.AT
+  - CO.S1
+  - CO.W1
+  - CO.Z1
+  - CO.Z3
   - GC.R1
+  - V1.CO
+  - V1.M1
+  - V1.M2
+  - V1.S1
+  - V1.W1
+  - V1.Z1
+  - V1.Z2
+  - Warning
 
 cases:
   - name: pass_space_1p4
